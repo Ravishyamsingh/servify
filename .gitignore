@@ -1,0 +1,28 @@
+# dependencies
+node_modules
+
+# builds
+dist
+
+# env & secrets
+.env
+.env.local
+.env.*
+!.env.example
+
+# db dumps/backups (keep migrations under supabase/migrations)
+*.dump.sql
+*.bak.sql
+*.backup.sql
+*.sql.gz
+dump.sql
+
+# tooling
+.vercel
+npm-debug.log*
+pnpm-debug.log*
+yarn-error.log*
+
+# os
+.DS_Store
+Thumbs.db
