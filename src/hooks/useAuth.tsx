@@ -109,25 +109,20 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         return { error };
       }
 
-      // Mark user confirmed on backend and then sign in
+      // Mark user confirmed on backend (best-effort); do not block signup if this fails
       try {
         const res = await fetch(`${API_BASE_URL}/api/confirm-user`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ email }),
         });
-        const payload = await res.json().catch(() => ({}));
         if (!res.ok) {
+          const payload = await res.json().catch(() => ({}));
           throw new Error(payload.error || "Unable to confirm user");
         }
       } catch (confirmErr) {
-        console.error("Failed to auto-confirm user:", confirmErr);
-        toast({
-          title: "Account confirmation issue",
-          description: confirmErr instanceof Error ? confirmErr.message : "Unable to confirm account",
-          variant: "destructive",
-        });
-        return { error: confirmErr as Error };
+        console.warn("Auto-confirm user failed (continuing):", confirmErr);
+        // We continue without showing a blocking toast to avoid breaking signup if the API is unreachable.
       }
 
       // Directly sign in after confirmation
