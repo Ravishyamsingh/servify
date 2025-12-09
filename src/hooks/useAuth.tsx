@@ -101,6 +101,18 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       });
 
       if (error) {
+        // If the user already exists, attempt a direct sign-in to avoid blocking signup flow.
+        if (error.message?.toLowerCase().includes("already registered")) {
+          const { error: signInExisting } = await supabase.auth.signInWithPassword({ email, password });
+          if (!signInExisting) {
+            toast({
+              title: "Welcome back!",
+              description: "Signed you in to your existing account.",
+            });
+            return { error: null };
+          }
+        }
+
         toast({
           title: "Sign up failed",
           description: error.message,
