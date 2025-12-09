@@ -1,9 +1,11 @@
-const API_BASE_URL =
-  import.meta.env.VITE_API_BASE_URL && import.meta.env.VITE_API_BASE_URL.trim() !== ''
-    ? import.meta.env.VITE_API_BASE_URL
-    : typeof window !== 'undefined'
-      ? '' // same-origin serverless functions on Vercel
-      : 'http://localhost:4242';
+const API_BASE_URL = (() => {
+  const envBase = import.meta.env.VITE_API_BASE_URL?.trim();
+  if (envBase) return envBase;
+
+  if (import.meta.env.DEV) return 'http://localhost:3000';
+
+  return '';
+})();
 
 export type CreateCheckoutSessionParams = {
   amountInMinor: number; // amount in smallest currency unit (e.g., paise)

@@ -87,15 +87,11 @@ Deploy to Vercel (static frontend + serverless API routes):
 	- `ALLOWED_ORIGINS` (comma-separated list; include your Vercel domain)
 	- Optional: leave `VITE_API_BASE_URL` empty to use same-origin serverless routes on Vercel.
 
-2. Import the repo in Vercel and use the defaults (root: `servify-connect`). `vercel.json` already sets:
-	- build command: `npm run build`
-	- output directory: `dist`
-	- Node runtime: `nodejs18.x` for `api/**/*`
-	- SPA rewrites so client-side routes work.
+2. Import the repo in Vercel and use the defaults (root: `servify-connect`). Vercel auto-detects Vite and serves `/api/*` as serverless functions.
 
 3. Deploy. The frontend will serve from `dist/` and API endpoints will be available under `/api/*` (e.g., `/api/create-checkout-session`, `/api/confirm-user`).
 
-4. For local parity, you can run `vercel dev` (after installing the Vercel CLI) to serve the Vite frontend and API routes together.
+4. For local parity, run `vercel dev` (after installing the Vercel CLI). This serves Vite on port 5173 and API routes on `http://localhost:3000/api/*`. If you use `npm run dev` alone, also set `VITE_API_BASE_URL=http://localhost:3000` so the `/api` calls resolve.
 
 ## Can I connect a custom domain to my Lovable project?
 

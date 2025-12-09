@@ -3,12 +3,16 @@ import { User, Session } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 
-const API_BASE_URL =
-  import.meta.env.VITE_API_BASE_URL && import.meta.env.VITE_API_BASE_URL.trim() !== ""
-    ? import.meta.env.VITE_API_BASE_URL
-    : typeof window !== "undefined"
-      ? ""
-      : "http://localhost:4242";
+const API_BASE_URL = (() => {
+  const envBase = import.meta.env.VITE_API_BASE_URL?.trim();
+  if (envBase) return envBase;
+
+  // Local dev: point to Vercel dev default port so /api routes exist.
+  if (import.meta.env.DEV) return "http://localhost:3000";
+
+  // Prod: same-origin serverless functions.
+  return "";
+})();
 
 interface AuthContextType {
   user: User | null;
